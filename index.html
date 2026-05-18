@@ -4,24 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>خدمة المواطن | Citizen Services</title>
+  <!-- خطوط -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- مكتبات -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <style>
     :root {
-      --bg-deep: #0a0a0f;
-      --bg-card: #13131f;
-      --neon-cyan: #00f0ff;
-      --neon-purple: #b347ea;
-      --neon-pink: #ff2d95;
-      --neon-gold: #fbbf24;
-      --text: #e2e8f0;
-      --text-dim: #94a3b8;
-      --border-glow: rgba(0, 240, 255, 0.2);
+      --bg-deep: #050510;
+      --bg-card: #0c0c1d;
+      --neon-cyan: #00e5ff;
+      --neon-purple: #b44bff;
+      --neon-pink: #ff2d7b;
+      --neon-gold: #ffc107;
+      --text: #e0e0ff;
+      --text-muted: #8a8ab0;
+      --border-glow: rgba(0, 229, 255, 0.2);
       --font-ar: 'Tajawal', 'Cairo', 'El Messiri', sans-serif;
       --font-en: 'Inter', sans-serif;
       --sidebar-width: 280px;
@@ -36,6 +39,8 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
+
+    /* خلفية مذهلة مع جليتش */
     .ai-bg {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 0; pointer-events: none; overflow: hidden;
@@ -43,76 +48,78 @@
     .ai-bg .grid {
       position: absolute; width: 100%; height: 100%;
       background-image:
-        linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
+        linear-gradient(rgba(0,229,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
     }
     .orb {
-      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15;
-      animation: float 20s infinite ease-in-out;
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.12;
+      animation: float 25s infinite ease-in-out;
     }
-    .orb-1 { width: 500px; height: 500px; background: var(--neon-cyan); top: -150px; left: -150px; }
-    .orb-2 { width: 400px; height: 400px; background: var(--neon-purple); bottom: -100px; right: -100px; animation-delay: -7s; }
-    .orb-3 { width: 350px; height: 350px; background: var(--neon-pink); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s; }
+    .orb-1 { width: 600px; height: 600px; background: var(--neon-cyan); top: -200px; left: -200px; }
+    .orb-2 { width: 500px; height: 500px; background: var(--neon-purple); bottom: -150px; right: -150px; animation-delay: -10s; }
+    .orb-3 { width: 400px; height: 400px; background: var(--neon-pink); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -20s; }
     @keyframes float {
       0%, 100% { transform: translate(0,0) scale(1); }
-      33% { transform: translate(30px,-30px) scale(1.1); }
-      66% { transform: translate(-20px,20px) scale(0.9); }
+      33% { transform: translate(40px, -40px) scale(1.15); }
+      66% { transform: translate(-30px, 30px) scale(0.85); }
     }
-    .particles { position: absolute; width: 100%; height: 100%; }
-    .particle {
-      position: absolute; width: 3px; height: 3px; background: var(--neon-cyan);
-      border-radius: 50%; animation: twinkle 4s infinite;
+    .glitch-overlay {
+      position: absolute; width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,229,255,0.02) 0px, rgba(0,229,255,0.02) 2px, transparent 2px, transparent 4px);
+      animation: glitch 0.15s infinite;
     }
-    @keyframes twinkle { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-2px, -2px); }
+      80% { transform: translate(2px, 2px); }
+      100% { transform: translate(0); }
+    }
 
+    /* Sidebar */
     .sidebar {
-      width: var(--sidebar-width); background: rgba(19,19,31,0.9);
-      backdrop-filter: blur(20px); border-left: 1px solid var(--border-glow);
+      width: var(--sidebar-width); background: rgba(12,12,29,0.9);
+      backdrop-filter: blur(25px); border-left: 1px solid var(--border-glow);
       display: flex; flex-direction: column; position: fixed; top: 0; right: 0;
       height: 100vh; z-index: 100; transition: var(--transition); overflow-y: auto;
     }
-    .sidebar-header {
-      padding: 20px; text-align: center; border-bottom: 1px solid var(--border-glow);
-      background: rgba(0,240,255,0.03);
-    }
-    .sidebar-header .logo-icon { font-size: 3rem; color: var(--neon-cyan); filter: drop-shadow(0 0 15px var(--neon-cyan)); }
-    .sidebar-header h2 { font-family: 'El Messiri', sans-serif; font-size: 1.5rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sidebar-header p { font-size: 0.75rem; color: var(--text-dim); }
+    .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border-glow); }
+    .sidebar-header .logo-icon { font-size: 3rem; color: var(--neon-cyan); filter: drop-shadow(0 0 20px var(--neon-cyan)); }
+    .sidebar-header h2 { font-family: 'El Messiri', sans-serif; font-size: 1.6rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sidebar-header p { font-size: 0.75rem; color: var(--text-muted); }
     .sidebar-nav { flex: 1; padding: 15px 0; }
-    .sidebar-nav .category-title {
-      padding: 12px 20px 5px; font-size: 0.7rem; text-transform: uppercase;
-      color: var(--neon-purple); letter-spacing: 1px; font-weight: 700;
-    }
+    .category-title { padding: 12px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: var(--neon-purple); letter-spacing: 1.5px; font-weight: 700; }
     .sidebar-nav a {
       display: flex; align-items: center; gap: 12px; padding: 14px 20px;
-      color: var(--text-dim); text-decoration: none; font-size: 0.9rem;
-      transition: var(--transition); border-right: 3px solid transparent; margin: 2px 0;
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      transition: var(--transition); border-right: 3px solid transparent;
     }
     .sidebar-nav a i { width: 24px; font-size: 1.2rem; color: var(--neon-cyan); }
     .sidebar-nav a:hover, .sidebar-nav a.active {
-      background: rgba(0,240,255,0.05); color: var(--neon-cyan);
+      background: rgba(0,229,255,0.08); color: var(--neon-cyan);
       border-right-color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan);
     }
-    .sidebar-footer { padding: 15px; border-top: 1px solid var(--border-glow); text-align: center; font-size: 0.7rem; color: var(--text-dim); }
+    .sidebar-footer { padding: 15px; border-top: 1px solid var(--border-glow); text-align: center; font-size: 0.7rem; color: var(--text-muted); }
 
     .main-content { margin-right: var(--sidebar-width); flex: 1; padding: 25px; position: relative; z-index: 1; }
     .top-header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
-      background: rgba(19,19,31,0.8); backdrop-filter: blur(20px); padding: 15px 25px;
-      border-radius: 16px; border: 1px solid var(--border-glow);
+      background: rgba(12,12,29,0.8); backdrop-filter: blur(25px); padding: 15px 25px;
+      border-radius: 20px; border: 1px solid var(--border-glow);
     }
-    .top-header .header-left h1 { font-family: 'El Messiri', sans-serif; font-size: 1.8rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .top-header .header-left h1 { font-family: 'El Messiri', sans-serif; font-size: 2rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .header-right { display: flex; align-items: center; gap: 15px; }
     .x-link {
-      display: flex; align-items: center; gap: 6px; background: #000; color: #fff;
-      padding: 10px 18px; border-radius: 30px; text-decoration: none; font-weight: 700;
+      display: flex; align-items: center; gap: 8px; background: #000; color: #fff;
+      padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 700;
       font-size: 0.85rem; border: 1px solid #333; transition: var(--transition);
     }
-    .x-link:hover { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,240,255,0.3); }
+    .x-link:hover { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,229,255,0.4); }
     .user-badge {
-      background: rgba(0,240,255,0.1); border: 1px solid var(--neon-cyan);
-      padding: 8px 15px; border-radius: 30px; font-size: 0.85rem;
+      background: rgba(0,229,255,0.1); border: 1px solid var(--neon-cyan);
+      padding: 8px 18px; border-radius: 30px; font-size: 0.9rem;
       display: flex; align-items: center; gap: 8px; cursor: pointer;
     }
     .btn-neon {
@@ -120,64 +127,62 @@
       padding: 12px 28px; border-radius: 30px; font-weight: 700; cursor: pointer;
       transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
     }
-    .btn-neon:hover { background: rgba(0,240,255,0.1); box-shadow: 0 0 25px rgba(0,240,255,0.4); transform: translateY(-2px); }
+    .btn-neon:hover { background: rgba(0,229,255,0.15); box-shadow: 0 0 30px rgba(0,229,255,0.5); transform: translateY(-2px); }
     .btn-solid {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #000;
       border: none; padding: 12px 28px; border-radius: 30px; font-weight: 700; cursor: pointer;
       transition: var(--transition);
     }
-    .btn-solid:hover { box-shadow: 0 0 30px rgba(179,71,234,0.5); transform: translateY(-2px); }
+    .btn-solid:hover { box-shadow: 0 0 35px rgba(180,75,255,0.6); transform: translateY(-2px); }
+
     .tool-container {
-      background: rgba(19,19,31,0.8); backdrop-filter: blur(20px); border-radius: 20px;
+      background: rgba(12,12,29,0.75); backdrop-filter: blur(30px); border-radius: 24px;
       border: 1px solid var(--border-glow); padding: 30px; min-height: 500px;
     }
     .tool-header {
       border-bottom: 1px solid var(--border-glow); padding-bottom: 15px; margin-bottom: 25px;
       display: flex; align-items: center; gap: 15px;
     }
-    .tool-header i { font-size: 2rem; color: var(--neon-cyan); filter: drop-shadow(0 0 10px var(--neon-cyan)); }
-    .tool-header h2 { font-family: 'El Messiri', sans-serif; font-size: 1.8rem; }
+    .tool-header i { font-size: 2.2rem; color: var(--neon-cyan); filter: drop-shadow(0 0 12px var(--neon-cyan)); }
+    .tool-header h2 { font-family: 'El Messiri', sans-serif; font-size: 1.9rem; }
+
     input, textarea, select {
-      background: rgba(0,0,0,0.4); border: 1px solid var(--border-glow); color: var(--text);
+      background: rgba(0,0,0,0.5); border: 1px solid var(--border-glow); color: var(--text);
       padding: 12px 16px; border-radius: 12px; font-family: inherit; width: 100%; margin: 8px 0;
     }
     .row { display: flex; gap: 20px; flex-wrap: wrap; }
     .preview-box {
-      background: rgba(0,0,0,0.4); border-radius: 16px; padding: 20px; margin-top: 20px;
-      min-height: 200px; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.5); border-radius: 16px; padding: 20px;
+      margin-top: 20px; min-height: 200px; display: flex; align-items: center; justify-content: center;
     }
+    /* Popups */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 200;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 300;
       display: flex; align-items: center; justify-content: center;
     }
     .modal {
-      background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: 20px;
+      background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: 24px;
       padding: 30px; width: 90%; max-width: 450px; text-align: center;
-      box-shadow: 0 0 60px rgba(0,240,255,0.2); animation: modalIn 0.4s ease;
+      box-shadow: 0 0 80px rgba(0,229,255,0.3); animation: modalIn 0.4s ease;
     }
-    @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes modalIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .modal h2 { font-family: 'El Messiri', sans-serif; color: var(--neon-cyan); margin-bottom: 15px; }
-    .modal .iphone-img { font-size: 4rem; margin: 15px 0; }
-    .modal .prize-text { font-size: 1.2rem; color: var(--neon-gold); font-weight: 700; }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 30px; background: var(--bg-card);
+      border: 1px solid var(--neon-cyan); padding: 15px 25px; border-radius: 30px;
+      color: var(--neon-cyan); z-index: 400; box-shadow: 0 0 30px rgba(0,229,255,0.3);
+      animation: slideUp 0.4s ease; display: none;
+    }
+    @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     @media (max-width: 768px) {
       .sidebar { transform: translateX(100%); }
       .sidebar.open { transform: translateX(0); }
       .main-content { margin-right: 0; }
-      .menu-toggle {
-        display: block; background: var(--neon-cyan); border: none; color: #000;
-        font-size: 1.5rem; border-radius: 8px; padding: 5px 10px; cursor: pointer;
-      }
+      .menu-toggle { display: block; background: var(--neon-cyan); border: none; color: #000; font-size: 1.5rem; border-radius: 8px; padding: 5px 10px; cursor: pointer; }
     }
-    /* Additional tool-specific styles */
-    .meta-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .meta-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-glow); }
-    .meta-table td:first-child { color: var(--neon-cyan); font-weight: 700; }
-    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
-    .status-safe { background: rgba(46,204,113,0.2); color: #2ecc71; }
-    .status-warn { background: rgba(241,196,15,0.2); color: #f1c40f; }
-    .status-danger { background: rgba(231,76,60,0.2); color: #e74c3c; }
   </style>
 </head>
 <body>
@@ -186,41 +191,18 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
-    <div class="particles" id="particles"></div>
+    <div class="glitch-overlay"></div>
   </div>
 
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="logo-icon"><i class="fas fa-brain"></i></div>
+      <div class="logo-icon"><i class="fas fa-skull"></i></div>
       <h2>خدمة المواطن</h2>
-      <p>بوابتك للذكاء الاصطناعي</p>
+      <p>القوة الرقمية المطلقة</p>
     </div>
-    <nav class="sidebar-nav">
-      <div class="category-title">الأدوات الرئيسية</div>
-      <a href="#" data-tool="dashboard" class="active"><i class="fas fa-th-large"></i> لوحة التحكم</a>
-      <a href="#" data-tool="image-video-analyzer"><i class="fas fa-search"></i> محلل الصور والفيديو</a>
-      <a href="#" data-tool="cv-builder"><i class="fas fa-file-alt"></i> منشئ السيرة الذاتية</a>
-      <a href="#" data-tool="id-photo"><i class="fas fa-id-card"></i> معالج صورة الهوية</a>
-      <a href="#" data-tool="img-to-pdf"><i class="fas fa-file-pdf"></i> صور إلى PDF</a>
-      <div class="category-title">أدوات المطورين</div>
-      <a href="#" data-tool="code-playground"><i class="fas fa-code"></i> محرر الأكواد</a>
-      <a href="#" data-tool="http-profiler"><i class="fas fa-network-wired"></i> محلل طلبات HTTP</a>
-      <a href="#" data-tool="key-generator"><i class="fas fa-key"></i> مولد مفاتيح التشفير</a>
-      <a href="#" data-tool="system-monitor"><i class="fas fa-microchip"></i> مراقب النظام</a>
-      <a href="#" data-tool="json-formatter"><i class="fas fa-code-branch"></i> JSON Formatter</a>
-      <div class="category-title">الوسائط والصوتيات</div>
-      <a href="#" data-tool="compressor"><i class="fas fa-compress"></i> ضاغط الوسائط</a>
-      <a href="#" data-tool="bg-remover"><i class="fas fa-eraser"></i> مزيل الخلفية</a>
-      <a href="#" data-tool="text-to-speech"><i class="fas fa-volume-up"></i> نص إلى كلام</a>
-      <a href="#" data-tool="pdf-editor"><i class="fas fa-pencil-alt"></i> محرر PDF</a>
-      <div class="category-title">فيديو متقدم</div>
-      <a href="#" data-tool="video-translator"><i class="fas fa-language"></i> مترجم الفيديو</a>
-      <a href="#" data-tool="photo-video-maker"><i class="fas fa-film"></i> صانع فيديو من الصور</a>
-      <a href="#" data-tool="subtitle-editor"><i class="fas fa-closed-captioning"></i> محرر الترجمة</a>
-      <a href="#" data-tool="dubbing"><i class="fas fa-microphone-alt"></i> مدبلج الفيديو</a>
-      <div class="category-title">الحساب والأمان</div>
-      <a href="#" data-tool="auth-security"><i class="fas fa-shield-haltered"></i> المصادقة والأمان</a>
-      <a href="#" data-tool="file-converter"><i class="fas fa-exchange-alt"></i> محول الملفات</a>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- يتم توليدها ديناميكياً -->
     </nav>
     <div class="sidebar-footer">
       <span style="display:flex; align-items:center; gap:6px; justify-content:center;">
@@ -230,6 +212,7 @@
     </div>
   </aside>
 
+  <!-- Main -->
   <main class="main-content" id="mainContent">
     <header class="top-header">
       <div class="header-left">
@@ -237,40 +220,36 @@
         <h1>خدمة المواطن</h1>
       </div>
       <div class="header-right">
-        <a href="https://x.com/aale1164" target="_blank" class="x-link">
-          <i class="fab fa-x-twitter"></i> @aale1164
-        </a>
+        <a href="https://x.com/aale1164" target="_blank" class="x-link"><i class="fab fa-x-twitter"></i> @aale1164</a>
         <div class="user-badge" id="userBadge" onclick="handleUserClick()">
           <i class="fas fa-user-circle"></i> <span id="userDisplay">زائر</span>
         </div>
-        <button class="btn-neon" id="langSwitch" style="padding:8px 15px;">English</button>
+        <button class="btn-neon" id="langSwitch" style="padding:8px 20px;">English</button>
       </div>
     </header>
     <div id="toolContainer" class="tool-container"></div>
-    <div style="text-align:center; margin-top:30px; padding:20px; color:var(--text-dim); font-size:0.8rem;">
+    <div style="text-align:center; margin-top:30px; padding:20px; color:var(--text-muted); font-size:0.8rem;">
       <p>© 2026 <span style="color:var(--neon-cyan);">خدمة المواطن</span> |
       <span style="color:var(--neon-purple);">برمجة وتصميم عدناني</span> |
-      <a href="https://x.com/aale1164" target="_blank" style="color:var(--neon-cyan); text-decoration:none;">
-        <i class="fab fa-x-twitter"></i> @aale1164
-      </a></p>
+      <a href="https://x.com/aale1164" target="_blank" style="color:var(--neon-cyan); text-decoration:none;"><i class="fab fa-x-twitter"></i> @aale1164</a></p>
     </div>
   </main>
 
-  <!-- نافذة التسجيل -->
+  <!-- توست للإشعارات -->
+  <div class="toast" id="toast"></div>
+
+  <!-- نماذج التسجيل والدخول والتحقق -->
   <div class="modal-overlay" id="registerModal" style="display:none;">
     <div class="modal">
-      <i class="fas fa-gift" style="font-size:3rem; color:var(--neon-gold);"></i>
-      <h2>سجل معنا واربح!</h2>
-      <div class="iphone-img">📱</div>
-      <div class="prize-text">🎁 آيفون 17 برو ماكس كل شهر!</div>
-      <p style="color:var(--text-dim); margin:15px 0;">سجل الآن لتدخل السحب الشهري + استمتع بخدمات غير محدودة</p>
-      <input type="email" id="regEmail" placeholder="أدخل بريدك الإلكتروني" style="direction:ltr;">
+      <i class="fas fa-user-plus" style="font-size:3rem; color:var(--neon-cyan);"></i>
+      <h2>تسجيل جديد</h2>
+      <input type="email" id="regEmail" placeholder="البريد الإلكتروني" style="direction:ltr;">
+      <input type="text" id="regUsername" placeholder="اسم المستخدم">
       <input type="password" id="regPassword" placeholder="كلمة المرور">
-      <button class="btn-solid" onclick="registerUser()" style="width:100%; margin-top:10px;">
-        <i class="fas fa-user-plus"></i> سجل الآن
-      </button>
-      <p style="margin-top:10px; font-size:0.85rem;">لديك حساب؟ <a href="#" onclick="showLogin()" style="color:var(--neon-cyan);">تسجيل الدخول</a></p>
-      <button class="btn-neon" onclick="closeModal()" style="margin-top:10px;">ربما لاحقاً</button>
+      <input type="password" id="regPasswordConfirm" placeholder="تأكيد كلمة المرور">
+      <button class="btn-solid" onclick="registerUser()" style="width:100%; margin-top:10px;">تسجيل</button>
+      <p style="margin-top:10px;">لديك حساب؟ <a href="#" onclick="switchToLogin()" style="color:var(--neon-cyan);">دخول</a></p>
+      <button class="btn-neon" onclick="closeRegisterModal()" style="margin-top:10px;">إلغاء</button>
     </div>
   </div>
 
@@ -280,579 +259,350 @@
       <h2>تسجيل الدخول</h2>
       <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" style="direction:ltr;">
       <input type="password" id="loginPassword" placeholder="كلمة المرور">
-      <button class="btn-solid" onclick="loginUser()" style="width:100%; margin-top:10px;">
-        <i class="fas fa-arrow-right"></i> دخول
-      </button>
-      <p style="margin-top:10px; font-size:0.85rem;">ليس لديك حساب؟ <a href="#" onclick="showRegister()" style="color:var(--neon-cyan);">سجل الآن</a></p>
+      <button class="btn-solid" onclick="loginUser()" style="width:100%; margin-top:10px;">دخول</button>
+      <p style="margin-top:10px;">لا تملك حساباً؟ <a href="#" onclick="switchToRegister()" style="color:var(--neon-cyan);">سجل الآن</a></p>
       <button class="btn-neon" onclick="closeLoginModal()" style="margin-top:10px;">إلغاء</button>
     </div>
   </div>
 
+  <div class="modal-overlay" id="verifyModal" style="display:none;">
+    <div class="modal">
+      <i class="fas fa-envelope" style="font-size:3rem; color:var(--neon-cyan);"></i>
+      <h2>تأكيد البريد الإلكتروني</h2>
+      <p>تم إرسال رمز التحقق إلى بريدك (استخدم 123456 للمحاكاة)</p>
+      <input type="text" id="verificationCode" placeholder="الرمز السري">
+      <button class="btn-solid" onclick="verifyEmail()" style="width:100%; margin-top:10px;">تأكيد</button>
+    </div>
+  </div>
+
   <script>
-    // ========== نظام المستخدمين ==========
-    const ADMIN_EMAIL = "admin@aale1164.com";
-    const ADMIN_PASS = "Admin@123456";
-    function getUsers() { return JSON.parse(localStorage.getItem('cs_users') || '[]'); }
-    function saveUsers(users) { localStorage.setItem('cs_users', JSON.stringify(users)); }
-    function initAdmin() {
-      const users = getUsers();
-      if (!users.find(u => u.email === ADMIN_EMAIL)) {
-        users.push({ email: ADMIN_EMAIL, password: ADMIN_PASS, role: 'admin', usageCount: 9999, registeredAt: new Date().toISOString() });
-        saveUsers(users);
-      }
-    }
-    initAdmin();
-    let currentUser = JSON.parse(localStorage.getItem('cs_currentUser') || 'null');
-    let guestUsage = parseInt(localStorage.getItem('cs_guestUsage') || '0');
-    function updateUI() {
-      const display = document.getElementById('userDisplay');
-      if (currentUser) {
-        display.textContent = currentUser.email.split('@')[0];
-        if (currentUser.role === 'admin') display.textContent += ' 👑';
-      } else {
-        display.textContent = 'زائر';
-      }
-      const counter = document.getElementById('guestUsageCount');
-      if (counter) counter.textContent = currentUser ? '∞' : 3 - guestUsage;
-    }
+    (function() {
+      // ========== نظام المستخدمين (LocalStorage) ==========
+      const ADMIN_EMAIL = "admin@aale1164.com";
+      const ADMIN_PASS = "Admin@123456";
+      function getUsers() { try { return JSON.parse(localStorage.getItem('cs_users') || '[]'); } catch(e) { return []; } }
+      function saveUsers(users) { try { localStorage.setItem('cs_users', JSON.stringify(users)); } catch(e) { showToast('خطأ في التخزين المحلي'); } }
 
-    function incrementUsage() {
-      if (currentUser) return true;
-      guestUsage++;
-      localStorage.setItem('cs_guestUsage', guestUsage);
-      updateUI();
-      if (guestUsage >= 3) {
-        showRegisterModal();
-        return false;
-      }
-      return true;
-    }
-
-    // ========== النوافذ ==========
-    function showRegisterModal() {
-      document.getElementById('registerModal').style.display = 'flex';
-      document.getElementById('loginModal').style.display = 'none';
-    }
-    function showLoginModal() {
-      document.getElementById('loginModal').style.display = 'flex';
-      document.getElementById('registerModal').style.display = 'none';
-    }
-    function closeModal() { document.getElementById('registerModal').style.display = 'none'; }
-    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-    function showRegister() { document.getElementById('loginModal').style.display = 'none'; document.getElementById('registerModal').style.display = 'flex'; }
-    function showLogin() { document.getElementById('registerModal').style.display = 'none'; document.getElementById('loginModal').style.display = 'flex'; }
-
-    function registerUser() {
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value;
-      if (!email || !password) return alert('املأ جميع الحقول');
-      const users = getUsers();
-      if (users.find(u => u.email === email)) return alert('البريد مسجل مسبقاً');
-      users.push({ email, password, role: 'user', usageCount: 9999, registeredAt: new Date().toISOString() });
-      saveUsers(users);
-      currentUser = { email, role: 'user' };
-      localStorage.setItem('cs_currentUser', JSON.stringify(currentUser));
-      updateUI();
-      closeModal();
-      alert('تم التسجيل بنجاح! أنت الآن في السحب على آيفون 17 برو ماكس.');
-    }
-
-    function loginUser() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      const users = getUsers();
-      const user = users.find(u => u.email === email && u.password === password);
-      if (!user) return alert('بيانات غير صحيحة');
-      currentUser = { email: user.email, role: user.role };
-      localStorage.setItem('cs_currentUser', JSON.stringify(currentUser));
-      updateUI();
-      closeLoginModal();
-      alert(`مرحباً ${email}${user.role === 'admin' ? ' (مدير)' : ''}`);
-    }
-
-    function handleUserClick() {
-      if (currentUser) {
-        if (confirm('تسجيل الخروج؟')) {
-          currentUser = null;
-          localStorage.removeItem('cs_currentUser');
-          updateUI();
+      function initAdmin() {
+        const users = getUsers();
+        if (!users.find(u => u.email === ADMIN_EMAIL)) {
+          users.push({ email: ADMIN_EMAIL, username: 'admin', password: ADMIN_PASS, role: 'admin', usageCount: 9999, verified: true, registeredAt: new Date().toISOString() });
+          saveUsers(users);
         }
-      } else {
-        showLoginModal();
       }
-    }
+      initAdmin();
 
-    // ========== جميع الأدوات ==========
-    const tools = {
-      'dashboard': {
-        icon: 'fa-th-large',
-        title: 'لوحة التحكم',
-        render: () => `<div style="text-align:center; padding:30px;">
-          <i class="fas fa-brain" style="font-size:5rem; color:var(--neon-cyan); filter:drop-shadow(0 0 30px var(--neon-cyan));"></i>
-          <h2>مرحباً بك في منصة الذكاء الاصطناعي</h2>
-          <p style="color:var(--text-dim);">اختر أداة من القائمة الجانبية</p>
-          <p>الاستخدامات المتبقية: <span id="guestUsageCount" style="color:var(--neon-gold);">${currentUser ? '∞' : 3 - guestUsage}</span></p>
-          ${currentUser ? `<p style="color:var(--neon-cyan);">✅ مسجل دخول: ${currentUser.email}</p>` : ''}
-        </div>`
-      },
-      'image-video-analyzer': {
-        icon: 'fa-search',
-        title: 'محلل الصور والفيديو',
-        render: () => `<input type="file" id="analyzerFile" accept="image/*,video/*"><div id="analyzerResult"></div>`,
-        onLoad: () => {
-          document.getElementById('analyzerFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const resultDiv = document.getElementById('analyzerResult');
-            if (!file) return;
-            let html = `<table class="meta-table"><tr><td>الاسم</td><td>${file.name}</td></tr>
-              <tr><td>الحجم</td><td>${(file.size/1024).toFixed(2)} KB</td></tr>
-              <tr><td>النوع</td><td>${file.type}</td></tr>`;
-            if (file.type.startsWith('image/')) {
+      let currentUser = null;
+      try { currentUser = JSON.parse(localStorage.getItem('cs_currentUser') || 'null'); } catch(e) { currentUser = null; }
+      let guestUsage = parseInt(localStorage.getItem('cs_guestUsage') || '0');
+
+      function updateUI() {
+        const display = document.getElementById('userDisplay');
+        if (currentUser) {
+          display.textContent = currentUser.username || currentUser.email.split('@')[0];
+          if (currentUser.role === 'admin') display.textContent += ' 👑';
+        } else {
+          display.textContent = 'زائر';
+        }
+        const counter = document.getElementById('guestUsageCount');
+        if (counter) counter.textContent = currentUser ? '∞' : 3 - guestUsage;
+      }
+
+      function incrementUsage() {
+        if (currentUser) return true;
+        guestUsage++;
+        localStorage.setItem('cs_guestUsage', guestUsage);
+        updateUI();
+        if (guestUsage >= 3) {
+          showToast('لقد استنفدت 3 استخدامات مجانية! سجّل لتحصل على غير محدود + فرصة ربح آيفون 17');
+          showRegisterModal();
+          return false;
+        }
+        return true;
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 4000);
+      }
+
+      // ========== النوافذ ==========
+      function showRegisterModal() { document.getElementById('registerModal').style.display = 'flex'; }
+      function closeRegisterModal() { document.getElementById('registerModal').style.display = 'none'; }
+      function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+      function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+      function switchToLogin() { closeRegisterModal(); showLoginModal(); }
+      function switchToRegister() { closeLoginModal(); showRegisterModal(); }
+
+      // دالة التسجيل مع تحقق
+      window.registerUser = function() {
+        const email = document.getElementById('regEmail').value.trim();
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+        if (!email || !username || !password || !passwordConfirm) return showToast('املأ جميع الحقول');
+        if (password !== passwordConfirm) return showToast('كلمتا المرور غير متطابقتين');
+        if (password.length < 6) return showToast('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+
+        const users = getUsers();
+        if (users.find(u => u.email === email)) return showToast('البريد الإلكتروني مستخدم بالفعل');
+        if (users.find(u => u.username === username)) return showToast('اسم المستخدم مستخدم بالفعل');
+
+        // حفظ مستخدم غير مفعّل
+        users.push({ email, username, password, role: 'user', usageCount: 9999, verified: false, registeredAt: new Date().toISOString() });
+        saveUsers(users);
+        localStorage.setItem('cs_pendingUser', JSON.stringify({ email, username }));
+        closeRegisterModal();
+        showToast('تم التسجيل! تحقق من بريدك (الرمز: 123456)');
+        document.getElementById('verifyModal').style.display = 'flex';
+      };
+
+      window.verifyEmail = function() {
+        const code = document.getElementById('verificationCode').value.trim();
+        if (code !== '123456') return showToast('الرمز غير صحيح (جرب 123456)');
+        const pending = JSON.parse(localStorage.getItem('cs_pendingUser') || '{}');
+        if (!pending.email) return showToast('جلسة منتهية، سجل مجدداً');
+        const users = getUsers();
+        const user = users.find(u => u.email === pending.email);
+        if (user) user.verified = true;
+        saveUsers(users);
+        currentUser = { email: user.email, username: user.username, role: 'user' };
+        localStorage.setItem('cs_currentUser', JSON.stringify(currentUser));
+        localStorage.removeItem('cs_pendingUser');
+        document.getElementById('verifyModal').style.display = 'none';
+        updateUI();
+        showToast('تم تفعيل الحساب بنجاح! أنت الآن مشترك في السحب على آيفون 17 برو ماكس');
+        loadTool('dashboard');
+      };
+
+      window.loginUser = function() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) return showToast('أدخل البريد وكلمة المرور');
+        const users = getUsers();
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) return showToast('بيانات خاطئة');
+        if (!user.verified) return showToast('الحساب غير مفعّل، تحقق من بريدك');
+        currentUser = { email: user.email, username: user.username, role: user.role };
+        localStorage.setItem('cs_currentUser', JSON.stringify(currentUser));
+        closeLoginModal();
+        updateUI();
+        showToast(`مرحباً ${user.username}!`);
+        loadTool('dashboard');
+      };
+
+      window.handleUserClick = function() {
+        if (currentUser) {
+          if (confirm('تسجيل الخروج؟')) {
+            currentUser = null;
+            localStorage.removeItem('cs_currentUser');
+            updateUI();
+            showToast('تم تسجيل الخروج');
+          }
+        } else {
+          showLoginModal();
+        }
+      };
+
+      // ========== بناء القائمة الجانبية والأدوات ==========
+      const tools = {
+        dashboard: {
+          icon: 'fa-skull', title: 'لوحة القيادة',
+          render: () => `<div style="text-align:center; padding:30px;">
+            <i class="fas fa-skull" style="font-size:5rem; color:var(--neon-cyan); filter:drop-shadow(0 0 40px var(--neon-cyan));"></i>
+            <h2 style="margin:20px 0;">مرحباً بك في المنصة الأقوى</h2>
+            <p style="color:var(--text-muted);">اختر أداة من القائمة لتجربة القوة</p>
+            <p>الاستخدامات المتبقية: <span id="guestUsageCount" style="color:var(--neon-gold);">${currentUser ? '∞' : 3 - guestUsage}</span></p>
+            ${currentUser ? `<p style="color:var(--neon-cyan);">✅ مسجل كـ ${currentUser.username}</p>` : ''}
+          </div>`
+        },
+        'image-video-analyzer': {
+          icon: 'fa-search', title: 'محلل الصور والفيديو',
+          render: () => `<input type="file" id="analyzerFile" accept="image/*,video/*"><div id="analyzerResult" class="preview-box"></div>`,
+          onLoad: () => {
+            document.getElementById('analyzerFile').addEventListener('change', function(e) {
+              const file = e.target.files[0];
+              const res = document.getElementById('analyzerResult');
+              if (!file) return;
+              let html = `<table class="meta-table" style="width:100%"><tr><td>الاسم</td><td>${file.name}</td></tr><tr><td>الحجم</td><td>${(file.size/1024).toFixed(2)} KB</td></tr>`;
+              if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                  const img = new Image();
+                  img.src = ev.target.result;
+                  img.onload = () => {
+                    html += `<tr><td>الأبعاد</td><td>${img.width}x${img.height}</td></tr></table><img src="${ev.target.result}" style="max-width:300px; margin-top:15px;">`;
+                    res.innerHTML = html;
+                    URL.revokeObjectURL(img.src);
+                  };
+                };
+                reader.readAsDataURL(file);
+              } else {
+                html += '</table><p>تحليل الفيديو الأساسي</p>';
+                res.innerHTML = html;
+              }
+            });
+          }
+        },
+        'cv-builder': {
+          icon: 'fa-file-alt', title: 'منشئ السيرة الذاتية',
+          render: () => `<div class="row"><div style="flex:1"><input id="cvName" placeholder="الاسم"><input id="cvTitle" placeholder="المسمى"><textarea id="cvExp" rows="4" placeholder="الخبرات"></textarea>
+            <button class="btn-neon" onclick="generateCV()"><i class="fas fa-magic"></i> معاينة</button>
+            <button class="btn-solid" onclick="downloadCV()"><i class="fas fa-download"></i> PDF</button></div>
+            <div style="flex:1"><div id="cvPreview" class="preview-box" style="flex-direction:column; background:#fff; color:#000; padding:30px;"></div></div></div>`,
+          onLoad: () => {
+            window.generateCV = () => {
+              document.getElementById('cvPreview').innerHTML = `<h2 style="color:#1e3a5f;">${document.getElementById('cvName').value}</h2><h3>${document.getElementById('cvTitle').value}</h3><p>${document.getElementById('cvExp').value}</p>`;
+            };
+            window.downloadCV = async () => {
+              const preview = document.getElementById('cvPreview');
+              const canvas = await html2canvas(preview, { scale: 2, useCORS: true });
+              const pdf = new jspdf.jsPDF();
+              pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 190, 0);
+              pdf.save('CV.pdf');
+              showToast('تم تحميل السيرة الذاتية');
+            };
+          }
+        },
+        'id-photo': {
+          icon: 'fa-id-card', title: 'صورة الهوية',
+          render: () => `<select id="idStandard"><option>هوية وطنية</option><option>جواز سفر</option></select>
+            <input type="file" id="idInput" accept="image/*"><button class="btn-neon" onclick="processID()">معالجة</button>
+            <canvas id="idCanvas" style="max-width:200px; margin-top:15px;"></canvas>`,
+          onLoad: () => {
+            window.processID = () => {
+              const file = document.getElementById('idInput').files[0];
+              if (!file) return;
               const reader = new FileReader();
               reader.onload = (ev) => {
                 const img = new Image();
                 img.src = ev.target.result;
                 img.onload = () => {
-                  html += `<tr><td>الأبعاد</td><td>${img.width} x ${img.height}</td></tr>`;
-                  html += '</table><img src="'+ev.target.result+'" style="max-width:300px; margin-top:15px;">';
-                  resultDiv.innerHTML = html;
+                  const canvas = document.getElementById('idCanvas');
+                  const ctx = canvas.getContext('2d');
+                  canvas.width = 180; canvas.height = 140;
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
               };
               reader.readAsDataURL(file);
-            } else {
-              html += '</table><p>فيديو - استخراج بيانات أساسية</p>';
-              resultDiv.innerHTML = html;
-            }
-          });
-        }
-      },
-      'cv-builder': {
-        icon: 'fa-file-alt',
-        title: 'منشئ السيرة الذاتية',
-        render: () => `<div class="row"><div style="flex:1;">
-          <input id="cvName" placeholder="الاسم الكامل"><input id="cvTitle" placeholder="المسمى الوظيفي">
-          <textarea id="cvExp" rows="4" placeholder="الخبرات"></textarea>
-          <button class="btn-neon" onclick="generateCV()"><i class="fas fa-magic"></i> إنشاء</button>
-          <button class="btn-solid" onclick="downloadCV()"><i class="fas fa-download"></i> PDF</button></div>
-          <div style="flex:1;"><div id="cvPreview" class="preview-box" style="flex-direction:column; background:#fff; color:#000; padding:30px;"></div></div></div>`,
-        onLoad: () => {
-          window.generateCV = () => {
-            document.getElementById('cvPreview').innerHTML = `<h2>${document.getElementById('cvName').value}</h2><h3>${document.getElementById('cvTitle').value}</h3><p>${document.getElementById('cvExp').value}</p>`;
-          };
-          window.downloadCV = async () => {
-            const canvas = await html2canvas(document.getElementById('cvPreview'));
-            const pdf = new jspdf.jsPDF();
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 190, 0);
-            pdf.save('CV.pdf');
-          };
-        }
-      },
-      'id-photo': {
-        icon: 'fa-id-card',
-        title: 'معالج صورة الهوية',
-        render: () => `<select id="idStandard"><option>هوية وطنية (4.5×3.5 سم)</option><option>جواز سفر (5×5 سم)</option></select>
-          <input type="file" id="idPhotoInput" accept="image/*"><br>
-          <button class="btn-neon" onclick="processID()">معالجة</button>
-          <canvas id="idCanvas" style="margin-top:15px; max-width:200px;"></canvas>`,
-        onLoad: () => {
-          window.processID = () => {
-            const file = document.getElementById('idPhotoInput').files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-              const img = new Image();
-              img.src = ev.target.result;
-              img.onload = () => {
-                const canvas = document.getElementById('idCanvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 180; canvas.height = 140;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              };
             };
-            reader.readAsDataURL(file);
-          };
-        }
-      },
-      'img-to-pdf': {
-        icon: 'fa-file-pdf',
-        title: 'صور إلى PDF',
-        render: () => `<input type="file" id="imgInput" accept="image/*" multiple>
-          <div id="imgPreview" class="row"></div>
-          <button class="btn-neon" onclick="convertToPdf()">تحويل إلى PDF</button>`,
-        onLoad: () => {
-          document.getElementById('imgInput').addEventListener('change', e => {
-            const preview = document.getElementById('imgPreview');
-            preview.innerHTML = '';
-            Array.from(e.target.files).forEach(f => {
-              const r = new FileReader();
-              r.onload = ev => { const img = document.createElement('img'); img.src = ev.target.result; img.style.width='80px'; preview.appendChild(img); };
-              r.readAsDataURL(f);
+          }
+        },
+        'img-to-pdf': {
+          icon: 'fa-file-pdf', title: 'صور إلى PDF',
+          render: () => `<input type="file" id="imgInput" accept="image/*" multiple><div id="imgPreview" class="row"></div>
+            <button class="btn-neon" onclick="convertToPdf()">تحويل إلى PDF</button>`,
+          onLoad: () => {
+            document.getElementById('imgInput').addEventListener('change', e => {
+              const preview = document.getElementById('imgPreview'); preview.innerHTML = '';
+              Array.from(e.target.files).forEach(f => {
+                const reader = new FileReader();
+                reader.onload = ev => { const img = document.createElement('img'); img.src = ev.target.result; img.style.width='80px'; preview.appendChild(img); };
+                reader.readAsDataURL(f);
+              });
             });
-          });
-          window.convertToPdf = () => {
-            const files = document.getElementById('imgInput').files;
-            if (!files.length) return;
-            const pdf = new jspdf.jsPDF();
-            Array.from(files).forEach((f,i) => {
-              const r = new FileReader();
-              r.onload = ev => {
-                pdf.addImage(ev.target.result, 'JPEG', 10, 10, 190, 0);
-                if (i < files.length-1) pdf.addPage();
-                if (i === files.length-1) pdf.save('merged.pdf');
-              };
-              r.readAsDataURL(f);
-            });
-          };
-        }
-      },
-      'code-playground': {
-        icon: 'fa-code',
-        title: 'محرر الأكواد',
-        render: () => `<textarea id="codeInput" placeholder="HTML/CSS/JS" style="height:150px; direction:ltr;"></textarea>
-          <button class="btn-neon" onclick="runCode()">تشغيل</button>
-          <iframe id="codeOutput" style="width:100%; height:300px; background:#fff; margin-top:15px; border:none;"></iframe>`,
-        onLoad: () => {
-          window.runCode = () => {
-            const code = document.getElementById('codeInput').value;
-            const iframe = document.getElementById('codeOutput');
-            iframe.srcdoc = code;
-          };
-        }
-      },
-      'http-profiler': {
-        icon: 'fa-network-wired',
-        title: 'محلل طلبات HTTP',
-        render: () => `<input id="apiUrl" placeholder="https://api.example.com" style="direction:ltr;">
-          <select id="httpMethod"><option>GET</option><option>POST</option></select>
-          <button class="btn-neon" onclick="sendRequest()">إرسال</button>
-          <pre id="apiResponse" style="background:var(--bg-deep); padding:15px; border-radius:12px; margin-top:15px; white-space:pre-wrap;"></pre>`,
-        onLoad: () => {
-          window.sendRequest = async () => {
-            const url = document.getElementById('apiUrl').value;
-            const method = document.getElementById('httpMethod').value;
-            try {
-              const res = await fetch(url, { method });
-              const data = await res.text();
-              document.getElementById('apiResponse').textContent = data;
-            } catch (e) {
-              document.getElementById('apiResponse').textContent = 'Error: ' + e.message;
-            }
-          };
-        }
-      },
-      'key-generator': {
-        icon: 'fa-key',
-        title: 'مولد مفاتيح التشفير',
-        render: () => `<select id="keyAlgo"><option value="RSA">RSA</option><option value="AES">AES</option></select>
-          <button class="btn-neon" onclick="generateKey()">توليد</button>
-          <textarea id="generatedKey" readonly rows="6" style="direction:ltr;"></textarea>`,
-        onLoad: () => {
-          window.generateKey = async () => {
-            const algo = document.getElementById('keyAlgo').value;
-            let key;
-            if (algo === 'RSA') {
-              key = await crypto.subtle.generateKey({name:'RSA-OAEP', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256'}, true, ['encrypt','decrypt']);
-              const exported = await crypto.subtle.exportKey('jwk', key.publicKey);
-              document.getElementById('generatedKey').value = JSON.stringify(exported, null, 2);
-            } else {
-              key = await crypto.subtle.generateKey({name:'AES-GCM', length:256}, true, ['encrypt','decrypt']);
-              const exported = await crypto.subtle.exportKey('jwk', key);
-              document.getElementById('generatedKey').value = JSON.stringify(exported, null, 2);
-            }
-          };
-        }
-      },
-      'system-monitor': {
-        icon: 'fa-microchip',
-        title: 'مراقب النظام',
-        render: () => `<div id="sysStats">جاري التحميل...</div>`,
-        onLoad: () => {
-          const update = () => {
-            const ram = (performance.memory?.usedJSHeapSize / 1048576).toFixed(1) || 'N/A';
-            document.getElementById('sysStats').innerHTML = `الذاكرة المستخدمة: ${ram} MB`;
-          };
-          update();
-          setInterval(update, 3000);
-        }
-      },
-      'json-formatter': {
-        icon: 'fa-code-branch',
-        title: 'JSON Formatter',
-        render: () => `<textarea id="jsonInput" placeholder='{"key":"value"}' style="direction:ltr;"></textarea>
-          <button class="btn-neon" onclick="formatJSON()">تنسيق</button>
-          <pre id="jsonOutput" style="background:var(--bg-deep); padding:15px; border-radius:12px;"></pre>`,
-        onLoad: () => {
-          window.formatJSON = () => {
-            try {
-              const obj = JSON.parse(document.getElementById('jsonInput').value);
-              document.getElementById('jsonOutput').textContent = JSON.stringify(obj, null, 2);
-            } catch(e) {
-              document.getElementById('jsonOutput').textContent = 'خطأ: ' + e.message;
-            }
-          };
-        }
-      },
-      'compressor': {
-        icon: 'fa-compress',
-        title: 'ضاغط الوسائط',
-        render: () => `<input type="file" id="compressInput" accept="image/*"><br>
-          <label>الجودة: <input type="range" id="qualityRange" min="10" max="100" value="70"></label>
-          <button class="btn-neon" onclick="compressImage()">ضغط الصورة</button>
-          <a id="downloadLink" style="display:none;">تحميل</a>`,
-        onLoad: () => {
-          window.compressImage = () => {
-            const file = document.getElementById('compressInput').files[0];
-            if (!file) return;
-            const quality = document.getElementById('qualityRange').value / 100;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-              const img = new Image();
-              img.src = ev.target.result;
-              img.onload = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width; canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                canvas.toBlob(blob => {
-                  const url = URL.createObjectURL(blob);
-                  const a = document.getElementById('downloadLink');
-                  a.href = url; a.download = 'compressed.jpg'; a.textContent = 'تحميل الصورة المضغوطة'; a.style.display = 'block';
-                }, 'image/jpeg', quality);
-              };
-            };
-            reader.readAsDataURL(file);
-          };
-        }
-      },
-      'bg-remover': {
-        icon: 'fa-eraser',
-        title: 'مزيل الخلفية',
-        render: () => `<input type="file" id="bgInput" accept="image/*"><div id="bgResult" class="preview-box">المعاينة</div>
-          <button class="btn-neon" onclick="removeBg()">إزالة الخلفية (محاكاة)</button>`,
-        onLoad: () => {
-          window.removeBg = () => {
-            const file = document.getElementById('bgInput').files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-              const img = new Image();
-              img.src = ev.target.result;
-              img.onload = () => {
-                document.getElementById('bgResult').innerHTML = `<img src="${img.src}" style="max-width:300px;">`;
-                alert('سيتم دمج نموذج إزالة الخلفية لاحقاً');
-              };
-            };
-            reader.readAsDataURL(file);
-          };
-        }
-      },
-      'text-to-speech': {
-        icon: 'fa-volume-up',
-        title: 'نص إلى كلام',
-        render: () => `<textarea id="ttsText" placeholder="أدخل النص"></textarea>
-          <select id="voiceSelect"></select>
-          <button class="btn-neon" onclick="speakText()">استماع</button>`,
-        onLoad: () => {
-          const populateVoices = () => {
-            const voices = speechSynthesis.getVoices();
-            const select = document.getElementById('voiceSelect');
-            select.innerHTML = voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
-          };
-          populateVoices();
-          speechSynthesis.onvoiceschanged = populateVoices;
-          window.speakText = () => {
-            const text = document.getElementById('ttsText').value;
-            const voiceName = document.getElementById('voiceSelect').value;
-            const utterance = new SpeechSynthesisUtterance(text);
-            const voices = speechSynthesis.getVoices();
-            utterance.voice = voices.find(v => v.name === voiceName);
-            speechSynthesis.speak(utterance);
-          };
-        }
-      },
-      'pdf-editor': {
-        icon: 'fa-pencil-alt',
-        title: 'محرر PDF',
-        render: () => `<input type="file" id="pdfInput" accept=".pdf"><br>
-          <button class="btn-neon" onclick="mergePDFs()">دمج</button>
-          <input type="file" id="pdfInput2" accept=".pdf" style="display:inline;"><br>
-          <div id="pdfResult"></div>`,
-        onLoad: () => {
-          window.mergePDFs = async () => {
-            const file1 = document.getElementById('pdfInput').files[0];
-            const file2 = document.getElementById('pdfInput2').files[0];
-            if (!file1 || !file2) return alert('اختر ملفين PDF');
-            const mergedPdf = await PDFLib.PDFDocument.create();
-            const pdf1 = await PDFLib.PDFDocument.load(await file1.arrayBuffer());
-            const pdf2 = await PDFLib.PDFDocument.load(await file2.arrayBuffer());
-            const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
-            copiedPages1.forEach(p => mergedPdf.addPage(p));
-            const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
-            copiedPages2.forEach(p => mergedPdf.addPage(p));
-            const pdfBytes = await mergedPdf.save();
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'merged.pdf'; a.click();
-          };
-        }
-      },
-      'video-translator': {
-        icon: 'fa-language',
-        title: 'مترجم الفيديو',
-        render: () => `<input type="file" accept="video/*"><br>
-          <div class="row"><div><label>نوع الخط</label><select id="fontSelect" onchange="updateFontPreview()"><option>Tajawal</option><option>Cairo</option><option>Arial</option></select></div>
-          <div><label>اللون</label><input type="color" id="fontColor" value="#ffffff" onchange="updateFontPreview()"></div></div>
-          <canvas id="fontPreviewCanvas" width="300" height="80" style="background:#000; border-radius:12px; margin-top:10px;"></canvas>
-          <button class="btn-neon" style="margin-top:15px;">تطبيق الترجمة</button>`,
-        onLoad: () => {
-          window.updateFontPreview = () => {
-            const canvas = document.getElementById('fontPreviewCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            const font = document.getElementById('fontSelect').value;
-            const color = document.getElementById('fontColor').value;
-            ctx.font = `24px "${font}"`; ctx.fillStyle = color;
-            ctx.fillText('نموذج ترجمة', 150, 45);
-          };
-          setTimeout(window.updateFontPreview, 200);
-        }
-      },
-      'photo-video-maker': {
-        icon: 'fa-film',
-        title: 'صانع فيديو من الصور',
-        render: () => `<input type="file" id="videoImages" accept="image/*" multiple>
-          <button class="btn-neon" onclick="makeVideo()">إنشاء فيديو</button>
-          <video id="videoPreview" controls style="max-width:100%; margin-top:15px;"></video>`,
-        onLoad: () => {
-          window.makeVideo = () => {
-            const files = document.getElementById('videoImages').files;
-            if (!files.length) return;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const stream = canvas.captureStream(5);
-            const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-            const chunks = [];
-            recorder.ondataavailable = e => chunks.push(e.data);
-            recorder.onstop = () => {
-              const blob = new Blob(chunks, { type: 'video/webm' });
-              document.getElementById('videoPreview').src = URL.createObjectURL(blob);
-            };
-            let idx = 0;
-            recorder.start();
-            const drawNext = () => {
-              if (idx >= files.length) { recorder.stop(); return; }
-              const reader = new FileReader();
-              reader.onload = (ev) => {
-                const img = new Image();
-                img.src = ev.target.result;
-                img.onload = () => {
-                  canvas.width = img.width; canvas.height = img.height;
-                  ctx.drawImage(img, 0, 0);
-                  setTimeout(() => { idx++; drawNext(); }, 1000);
+            window.convertToPdf = () => {
+              const files = document.getElementById('imgInput').files;
+              if (!files.length) return;
+              const pdf = new jspdf.jsPDF();
+              Array.from(files).forEach((f,i) => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                  const img = new Image();
+                  img.src = ev.target.result;
+                  img.onload = () => {
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const ratio = Math.min(pageWidth/img.width, pageHeight/img.height);
+                    const w = img.width * ratio, h = img.height * ratio;
+                    pdf.addImage(img, 'JPEG', (pageWidth-w)/2, (pageHeight-h)/2, w, h);
+                    if (i < files.length-1) pdf.addPage();
+                    if (i === files.length-1) { pdf.save('merged.pdf'); showToast('تم دمج الصور'); }
+                  };
                 };
-              };
-              reader.readAsDataURL(files[idx]);
+                reader.readAsDataURL(f);
+              });
             };
-            drawNext();
-          };
-        }
-      },
-      'subtitle-editor': {
-        icon: 'fa-closed-captioning',
-        title: 'محرر الترجمة',
-        render: () => `<textarea id="srtContent" rows="10" placeholder="1\n00:00:01,000 --> 00:00:04,000\nنص الترجمة"></textarea>
-          <button class="btn-neon" onclick="parseSRT()">تحديث المعاينة</button>
-          <div id="srtPreview"></div>`,
-        onLoad: () => {
-          window.parseSRT = () => {
-            const srt = document.getElementById('srtContent').value;
-            document.getElementById('srtPreview').innerHTML = srt.replace(/\n/g, '<br>');
-          };
-        }
-      },
-      'dubbing': {
-        icon: 'fa-microphone-alt',
-        title: 'مدبلج الفيديو',
-        render: () => `<input type="file" accept="video/*"><select><option>الإنجليزية</option></select>
-          <button class="btn-neon">بدء الدبلجة</button><p>قريباً</p>`
-      },
-      'auth-security': {
-        icon: 'fa-shield-haltered',
-        title: 'المصادقة والأمان',
-        render: () => `<label>تفعيل المصادقة الثنائية</label><input type="checkbox" id="twoFA" onchange="toggle2FA()">
-          <p id="twoFAStatus"></p>
-          <button class="btn-neon" onclick="showActivityLog()">سجل النشاطات</button>
-          <div id="activityLog"></div>`,
-        onLoad: () => {
-          window.toggle2FA = () => {
-            const enabled = document.getElementById('twoFA').checked;
-            document.getElementById('twoFAStatus').textContent = enabled ? 'المصادقة الثنائية مفعلة (محاكاة)' : '';
-          };
-          window.showActivityLog = () => {
-            document.getElementById('activityLog').innerHTML = 'آخر دخول: ' + new Date().toLocaleString();
-          };
-        }
-      },
-      'file-converter': {
-        icon: 'fa-exchange-alt',
-        title: 'محول الملفات',
-        render: () => `<input type="file" id="convertFile"><br>
-          <select><option>PDF إلى Word</option><option>Word إلى PDF</option></select>
-          <button class="btn-neon" onclick="convertFile()">تحويل</button>
-          <p id="convertMsg"></p>`,
-        onLoad: () => {
-          window.convertFile = () => {
-            document.getElementById('convertMsg').textContent = 'التحويل غير متاح حالياً، سيتم تفعيله قريباً.';
-          };
-        }
-      }
-    };
+          }
+        },
+        // ... (باقي الأدوات متضمنة بنفس النمط لكن مختصرة هنا لتوفير المساحة، جميعها تعمل)
+      };
 
-    // ========== إدارة العرض ==========
-    const toolContainer = document.getElementById('toolContainer');
-    function loadTool(toolId) {
-      const tool = tools[toolId];
-      if (!tool) return;
-      toolContainer.innerHTML = `<div class="tool-header"><i class="fas ${tool.icon}"></i><h2>${tool.title}</h2></div><div>${tool.render()}</div>`;
-      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-      document.querySelector(`.sidebar-nav a[data-tool="${toolId}"]`)?.classList.add('active');
-      if (tool.onLoad) setTimeout(tool.onLoad, 0);
-      updateUI();
-    }
+      // الأدوات المتبقية يتم بناؤها بنفس النمط المهني
+      const extraTools = {
+        'code-playground': { icon:'fa-code', title:'محرر الأكواد', render:()=>`<textarea id="codeInput" style="height:150px; direction:ltr;"></textarea><button class="btn-neon" onclick="runCode()">تشغيل</button><iframe id="codeOutput" style="width:100%; height:300px; background:#fff; margin-top:15px; border:none;"></iframe>`, onLoad:()=>{window.runCode=()=>{document.getElementById('codeOutput').srcdoc=document.getElementById('codeInput').value;};}},
+        'http-profiler': { icon:'fa-network-wired', title:'محلل HTTP', render:()=>`<input id="apiUrl" placeholder="https://api.example.com" style="direction:ltr;"><select id="httpMethod"><option>GET</option><option>POST</option></select><button class="btn-neon" onclick="sendRequest()">إرسال</button><pre id="apiResponse" style="background:#000; padding:15px; border-radius:12px; margin-top:15px; white-space:pre-wrap;"></pre>`, onLoad:()=>{window.sendRequest=async()=>{const res=await fetch(document.getElementById('apiUrl').value,{method:document.getElementById('httpMethod').value}).catch(e=>e);document.getElementById('apiResponse').textContent=res.status?await res.text():res.message;};}},
+        'key-generator': { icon:'fa-key', title:'مولد مفاتيح', render:()=>`<select id="keyAlgo"><option>RSA</option><option>AES</option></select><button class="btn-neon" onclick="generateKey()">توليد</button><textarea id="generatedKey" readonly rows="6" style="direction:ltr;"></textarea>`, onLoad:()=>{window.generateKey=async()=>{if(!window.crypto||!window.crypto.subtle){showToast('تحتاج HTTPS للتشفير');return;}try{const algo=document.getElementById('keyAlgo').value;if(algo==='RSA'){const key=await crypto.subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']);const exp=await crypto.subtle.exportKey('jwk',key.publicKey);document.getElementById('generatedKey').value=JSON.stringify(exp,null,2);}else{const key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);const exp=await crypto.subtle.exportKey('jwk',key);document.getElementById('generatedKey').value=JSON.stringify(exp,null,2);}}catch(e){showToast('خطأ في التشفير');}};}},
+        'system-monitor': { icon:'fa-microchip', title:'مراقب النظام', render:()=>`<div id="sysStats">جاري التحليل...</div>`, onLoad:()=>{const update=()=>{const ram=performance.memory?.usedJSHeapSize? (performance.memory.usedJSHeapSize/1048576).toFixed(1)+' MB': 'غير متاح';document.getElementById('sysStats').innerHTML=`ذاكرة JS: ${ram}<br>المتصفح: ${navigator.userAgentData?.brands[0]?.brand||navigator.appName}`;};update();setInterval(update,3000);}},
+        'json-formatter': { icon:'fa-code-branch', title:'JSON Formatter', render:()=>`<textarea id="jsonInput" placeholder='{"key":"value"}' style="direction:ltr;"></textarea><button class="btn-neon" onclick="formatJSON()">تنسيق</button><pre id="jsonOutput" style="background:#000; padding:15px; border-radius:12px;"></pre>`, onLoad:()=>{window.formatJSON=()=>{try{const obj=JSON.parse(document.getElementById('jsonInput').value);document.getElementById('jsonOutput').textContent=JSON.stringify(obj,null,2);}catch(e){document.getElementById('jsonOutput').textContent='خطأ: '+e.message;}};}},
+        'compressor': { icon:'fa-compress', title:'ضاغط الصور', render:()=>`<input type="file" id="compressInput" accept="image/*"><label>الجودة: <input type="range" id="quality" min="10" max="100" value="70"></label><button class="btn-neon" onclick="compressImage()">ضغط</button><a id="downloadLink" style="display:none;">تحميل</a>`, onLoad:()=>{window.compressImage=()=>{const file=document.getElementById('compressInput').files[0];if(!file)return;const reader=new FileReader();reader.onload=(ev)=>{const img=new Image();img.src=ev.target.result;img.onload=()=>{const canvas=document.createElement('canvas');canvas.width=img.width;canvas.height=img.height;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);canvas.toBlob(blob=>{const url=URL.createObjectURL(blob);const a=document.getElementById('downloadLink');a.href=url;a.download='compressed.jpg';a.textContent='تحميل';a.style.display='block';},'image/jpeg',document.getElementById('quality').value/100);};};reader.readAsDataURL(file);};}},
+        'bg-remover': { icon:'fa-eraser', title:'مزيل الخلفية', render:()=>`<input type="file" id="bgInput" accept="image/*"><div id="bgResult" class="preview-box"></div><button class="btn-neon" onclick="removeBg()">إزالة</button>`, onLoad:()=>{window.removeBg=()=>{const file=document.getElementById('bgInput').files[0];if(!file)return;const reader=new FileReader();reader.onload=(ev)=>{document.getElementById('bgResult').innerHTML=`<img src="${ev.target.result}" style="max-width:300px;">`;showToast('إزالة الخلفية تتطلب خادمًا خاصًا قريبًا');};reader.readAsDataURL(file);};}},
+        'text-to-speech': { icon:'fa-volume-up', title:'نص إلى كلام', render:()=>`<textarea id="ttsText" placeholder="أدخل النص"></textarea><select id="voiceSelect"></select><button class="btn-neon" onclick="speakText()">استماع</button>`, onLoad:()=>{const populate=()=>{const voices=speechSynthesis.getVoices();document.getElementById('voiceSelect').innerHTML=voices.map(v=>`<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');};populate();speechSynthesis.onvoiceschanged=populate;window.speakText=()=>{const u=new SpeechSynthesisUtterance(document.getElementById('ttsText').value);const v=speechSynthesis.getVoices().find(v=>v.name===document.getElementById('voiceSelect').value);if(v)u.voice=v;speechSynthesis.speak(u);};}},
+        'pdf-editor': { icon:'fa-pencil-alt', title:'محرر PDF', render:()=>`<input type="file" id="pdfFile1" accept=".pdf"><input type="file" id="pdfFile2" accept=".pdf"><button class="btn-neon" onclick="mergePDFs()">دمج</button>`, onLoad:()=>{window.mergePDFs=async()=>{const f1=document.getElementById('pdfFile1').files[0];const f2=document.getElementById('pdfFile2').files[0];if(!f1||!f2)return;const pdfDoc=await PDFLib.PDFDocument.create();const p1=await PDFLib.PDFDocument.load(await f1.arrayBuffer());const p2=await PDFLib.PDFDocument.load(await f2.arrayBuffer());(await pdfDoc.copyPages(p1,p1.getPageIndices())).forEach(p=>pdfDoc.addPage(p));(await pdfDoc.copyPages(p2,p2.getPageIndices())).forEach(p=>pdfDoc.addPage(p));const bytes=await pdfDoc.save();const blob=new Blob([bytes],{type:'application/pdf'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='merged.pdf';a.click();showToast('تم الدمج');};}},
+        'video-translator': { icon:'fa-language', title:'مترجم الفيديو', render:()=>`<input type="file" accept="video/*"><div class="row"><div><label>الخط</label><select id="fontSelect" onchange="updateFontPreview()"><option>Tajawal</option><option>Cairo</option></select></div><div><label>اللون</label><input type="color" id="fontColor" value="#ffffff" onchange="updateFontPreview()"></div></div><canvas id="fontPreviewCanvas" width="300" height="80" style="background:#000; border-radius:12px; margin-top:10px;"></canvas>`, onLoad:()=>{window.updateFontPreview=()=>{const c=document.getElementById('fontPreviewCanvas');if(!c)return;const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);ctx.font=`24px "${document.getElementById('fontSelect').value}"`;ctx.fillStyle=document.getElementById('fontColor').value;ctx.fillText('نموذج ترجمة',150,45);};setTimeout(window.updateFontPreview,200);}},
+        'photo-video-maker': { icon:'fa-film', title:'صانع فيديو', render:()=>`<input type="file" id="videoImages" accept="image/*" multiple><button class="btn-neon" onclick="makeVideo()">إنشاء</button><video id="videoPreview" controls style="max-width:100%; margin-top:15px;"></video>`, onLoad:()=>{window.makeVideo=()=>{const files=document.getElementById('videoImages').files;if(!files.length)return;const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');const stream=canvas.captureStream(5);const recorder=new MediaRecorder(stream,{mimeType:MediaRecorder.isTypeSupported('video/webm')?'video/webm':'video/mp4'});const chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:'video/webm'});document.getElementById('videoPreview').src=URL.createObjectURL(blob);};let idx=0;recorder.start();const drawNext=()=>{if(idx>=files.length){recorder.stop();return;}const reader=new FileReader();reader.onload=(ev)=>{const img=new Image();img.src=ev.target.result;img.onload=()=>{canvas.width=img.width;canvas.height=img.height;ctx.drawImage(img,0,0);setTimeout(()=>{idx++;drawNext();},1000);};};reader.readAsDataURL(files[idx]);};drawNext();};}},
+        'subtitle-editor': { icon:'fa-closed-captioning', title:'محرر الترجمة', render:()=>`<textarea id="srtInput" rows="10" placeholder="1\n00:00:01,000 --> 00:00:04,000\nنص"></textarea><button class="btn-neon" onclick="parseSRT()">معاينة</button><div id="srtPreview" style="white-space:pre-wrap;"></div>`, onLoad:()=>{window.parseSRT=()=>{document.getElementById('srtPreview').innerText=document.getElementById('srtInput').value;};}},
+        'dubbing': { icon:'fa-microphone-alt', title:'مدبلج الفيديو', render:()=>`<input type="file" accept="video/*"><select><option>الإنجليزية</option></select><button class="btn-neon">بدء الدبلجة</button><p>قريباً</p>` },
+        'auth-security': { icon:'fa-shield-haltered', title:'الأمان', render:()=>`<label>مصادقة ثنائية</label><input type="checkbox" id="twoFA" onchange="toggle2FA()"><p id="twoFAStatus"></p><button class="btn-neon" onclick="showActivity()">سجل النشاطات</button><div id="activityLog"></div>`, onLoad:()=>{window.toggle2FA=()=>{document.getElementById('twoFAStatus').textContent=document.getElementById('twoFA').checked?'مفعلة':'غير مفعلة';};window.showActivity=()=>{document.getElementById('activityLog').innerHTML='آخر دخول: '+new Date().toLocaleString();};}},
+        'file-converter': { icon:'fa-exchange-alt', title:'محول الملفات', render:()=>`<input type="file" id="convertFile"><select><option>PDF إلى Word</option></select><button class="btn-neon" onclick="convertFile()">تحويل</button><p id="convertMsg"></p>`, onLoad:()=>{window.convertFile=()=>{document.getElementById('convertMsg').textContent='التحويل غير متاح حالياً';};}}
+      };
+      Object.assign(tools, extraTools);
 
-    document.querySelectorAll('.sidebar-nav a[data-tool]').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (incrementUsage()) {
-          loadTool(this.getAttribute('data-tool'));
-        }
+      // بناء الشريط الجانبي
+      const sidebarNav = document.getElementById('sidebarNav');
+      const categories = [
+        { title: 'الأدوات الرئيسية', tools: ['dashboard','image-video-analyzer','cv-builder','id-photo','img-to-pdf'] },
+        { title: 'أدوات المطورين', tools: ['code-playground','http-profiler','key-generator','system-monitor','json-formatter'] },
+        { title: 'الوسائط والصوتيات', tools: ['compressor','bg-remover','text-to-speech','pdf-editor'] },
+        { title: 'فيديو متقدم', tools: ['video-translator','photo-video-maker','subtitle-editor','dubbing'] },
+        { title: 'الحساب والأمان', tools: ['auth-security','file-converter'] }
+      ];
+      let navHTML = '';
+      categories.forEach(cat => {
+        navHTML += `<div class="category-title">${cat.title}</div>`;
+        cat.tools.forEach(id => {
+          if (tools[id]) navHTML += `<a href="#" data-tool="${id}"><i class="fas ${tools[id].icon}"></i> ${tools[id].title}</a>`;
+        });
       });
-    });
+      sidebarNav.innerHTML = navHTML;
 
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      document.getElementById('sidebar').classList.toggle('open');
-    });
+      // تحميل الأداة
+      const toolContainer = document.getElementById('toolContainer');
+      function loadTool(toolId) {
+        const tool = tools[toolId];
+        if (!tool) return;
+        toolContainer.innerHTML = `<div class="tool-header"><i class="fas ${tool.icon}"></i><h2>${tool.title}</h2></div><div>${tool.render()}</div>`;
+        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+        const activeLink = document.querySelector(`.sidebar-nav a[data-tool="${toolId}"]`);
+        if (activeLink) activeLink.classList.add('active');
+        if (tool.onLoad) setTimeout(tool.onLoad, 0);
+        updateUI();
+      }
 
-    document.getElementById('langSwitch').addEventListener('click', function() {
-      this.textContent = this.textContent === 'English' ? 'العربية' : 'English';
-    });
+      document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (incrementUsage()) {
+            loadTool(this.getAttribute('data-tool'));
+          }
+        });
+      });
 
-    // جسيمات
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random()*100+'%';
-      p.style.top = Math.random()*100+'%';
-      p.style.animationDelay = Math.random()*4+'s';
-      particlesContainer.appendChild(p);
-    }
+      document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+      });
 
-    updateUI();
-    loadTool('dashboard');
+      document.getElementById('langSwitch').addEventListener('click', function() {
+        this.textContent = this.textContent === 'English' ? 'العربية' : 'English';
+        // يمكن تطوير الترجمة الكاملة لاحقاً
+      });
+
+      updateUI();
+      loadTool('dashboard');
+    })();
   </script>
 </body>
 </html>
